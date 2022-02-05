@@ -3,7 +3,7 @@ ui = true ## or false
 # MySQL backend config
 storage "mysql" {
   ha_enabled = "true"
-  address = "127.0.0.1:3307"
+  address = "127.0.0.1:13307"
   username = "user"
   password = "qwer12#$"
   database = "vaultdb"
