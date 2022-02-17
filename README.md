@@ -91,8 +91,8 @@ base64 --decode <<< NDExMSAxMTExIDExMTEgMTExMQo=
 
 ### rotate the encryption key
 ``` bash
-vault write -f transit/keys/orders/rotate	# with root token
-vault write transit/rewrap/orders ciphertext="vault:v1:FxSceBj6PvzcLtcts1Z30LxR69YwEmm9cL/iHFSrEjcoY39d0F9LaFL/TuXH2+Nl"	# with root token
+./vault write -f transit/keys/orders/rotate	# with root token
+./vault write transit/rewrap/orders ciphertext="vault:v1:FxSceBj6PvzcLtcts1Z30LxR69YwEmm9cL/iHFSrEjcoY39d0F9LaFL/TuXH2+Nl"	# with root token
 #Key            Value
 #---            -----
 #ciphertext     vault:v2:IP3eqm1wVgtZCKTsRhRm7i19MGr90X2J+0ofpu3ocSgFqehTcbmQrtzLX8ZpxP1F
@@ -104,4 +104,23 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 ```
 
 ## database credential
-TBD
+1. enable database secrets engine
+		``` bash
+		./vault secrets enable database
+		```
+2. config DB connection
+		```bash
+		./vault write database/config/testdb plugin_name=mysql-database-plugin connection_url="{{username}}:{{password}}@tcp(127.0.0.1:13306)/" allowed_roles="vaultrole" username="vaultroot" password="qwer12#$"
+		```
+3. config role to make DB credentials
+		```bash
+./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole;	CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
+		```
+4. change vault user's db credential
+		```bash
+		./vault write -force database/rotate-root/testdb
+		```
+5. make DB credentials
+		```bash
+		./vault read database/creds/vaultrole
+		```
