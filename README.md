@@ -140,14 +140,14 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 		```bash
 		$ ./vault lease renew --format=json  database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r
 		> {
-		>		"request_id": "f528ea49-740e-c0b2-8bc6-1badbfcc3187",
-		>		"lease_id": "database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r",
-		>		"lease_duration": 2,
-		>		"renewable": true,
-		>		"data": null,
-		>		"warnings": [
-		>				"TTL of \"1m\" exceeded the effective max_ttl of \"2s\"; TTL value is capped accordingly"
-		>		]
+		>	"request_id": "f528ea49-740e-c0b2-8bc6-1badbfcc3187",
+		>	"lease_id": "database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r",
+		>	"lease_duration": 2,
+		>	"renewable": true,
+		>	"data": null,
+		>	"warnings": [
+		>		"TTL of \"1m\" exceeded the effective max_ttl of \"2s\"; TTL value is capped accordingly"
+		>	]
 		>}
 		```
 
