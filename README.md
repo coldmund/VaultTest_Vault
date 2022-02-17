@@ -105,50 +105,49 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 
 ## database credential
 1. enable database secrets engine
-		``` bash
-		./vault secrets enable database
-		```
+	``` bash
+	./vault secrets enable database
+	```
 2. config DB connection
-		```bash
-		./vault write database/config/testdb plugin_name=mysql-database-plugin connection_url="{{username}}:{{password}}@tcp(127.0.0.1:13306)/" allowed_roles="vaultrole" username="vaultroot" password="qwer12#$"
-		```
+	```bash
+	./vault write database/config/testdb plugin_name=mysql-database-plugin connection_url="{{username}}:{{password}}@tcp(127.0.0.1:13306)/" allowed_roles="vaultrole" username="vaultroot" password="qwer12#$"
+	```
 3. config role to make DB credentials
-		```bash
-./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole;	CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
-		```
+	```bash
+		./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole;	CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
+	```
 4. change vault user's db credential
-		```bash
-		./vault write -force database/rotate-root/testdb
-		```
+	```bash
+	./vault write -force database/rotate-root/testdb
+	```
 5. make DB credentials
-		```bash
-		./vault read database/creds/vaultrole
-		```
+	```bash
+	./vault read database/creds/vaultrole
+	```
 6. list DB credentials
-		```bash
-		./vault list sys/leases/lookup/database/creds/vaultrole
-		```
+	```bash
+	./vault list sys/leases/lookup/database/creds/vaultrole
+	```
 7. revoke DB credential
-		```bash
-		./vault lease revoke database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
-		```
+	```bash
+	./vault lease revoke database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
+	```
 8. renew DB credential.
+	```bash
+	./vault lease renew database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
+	```
+	1. Warning occurs if max_ttl would be reached by the renew command.
 		```bash
-		./vault lease renew database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
+		$ ./vault lease renew --format=json  database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r
+		> {
+		>		"request_id": "f528ea49-740e-c0b2-8bc6-1badbfcc3187",
+		>		"lease_id": "database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r",
+		>		"lease_duration": 2,
+		>		"renewable": true,
+		>		"data": null,
+		>		"warnings": [
+		>				"TTL of \"1m\" exceeded the effective max_ttl of \"2s\"; TTL value is capped accordingly"
+		>		]
+		>}
 		```
-		1. Warning occurs if max_ttl would be reached by the renew command.
-				```bash
-				$ ./vault lease renew --format=json  database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r
-				> {
-				>		"request_id": "f528ea49-740e-c0b2-8bc6-1badbfcc3187",
-				>		"lease_id": "database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r",
-				>		"lease_duration": 2,
-				>		"renewable": true,
-				>		"data": null,
-				>		"warnings": [
-				>				"TTL of \"1m\" exceeded the effective max_ttl of \"2s\"; TTL value is capped accordingly"
-				>		]
-				>}
-				```
-
 
