@@ -124,3 +124,31 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 		```bash
 		./vault read database/creds/vaultrole
 		```
+6. list DB credentials
+		```bash
+		./vault list sys/leases/lookup/database/creds/vaultrole
+		```
+7. revoke DB credential
+		```bash
+		./vault lease revoke database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
+		```
+8. renew DB credential.
+		```bash
+		./vault lease renew database/creds/vaultrole/dElgGIagos6MjLyiB6l7mjc9
+		```
+		1. Warning occurs if max_ttl would be reached by the renew command.
+				```bash
+				$ ./vault lease renew --format=json  database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r
+				> {
+				>		"request_id": "f528ea49-740e-c0b2-8bc6-1badbfcc3187",
+				>		"lease_id": "database/creds/vaultrole/fQFTHAlW7lAMIDiPRhKngu1r",
+				>		"lease_duration": 2,
+				>		"renewable": true,
+				>		"data": null,
+				>		"warnings": [
+				>				"TTL of \"1m\" exceeded the effective max_ttl of \"2s\"; TTL value is capped accordingly"
+				>		]
+				>}
+				```
+
+
