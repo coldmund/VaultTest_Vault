@@ -10,15 +10,15 @@
 ./vault operator init
 ```
 - you will get unseal keys and root token like below. save them in safe place.
-  ```
-  Unseal Key 1: G4n1dca3C7t/mpzAmAA2CM1bz6xrUrgsCwU3dINcBGcJ
-  Unseal Key 2: OZPVGkltqpLmvHnP9QxWxyZ9H4rGAeuJU7lUa39I5Cpg
-  Unseal Key 3: wypIR03lYUbUOREEC4H4kU9/NH01SnVU7BEBXcr75Rrj
-  Unseal Key 4: VA3CKC4sHC+lMf9uXuj3m+RXkz08imoxrI17nOuAIRR1
-  Unseal Key 5: Y4Xf11HCARw+xM0hEI+DzgnBB1DGnzSBT0yLicJ4rufy
+	```
+	Unseal Key 1: G4n1dca3C7t/mpzAmAA2CM1bz6xrUrgsCwU3dINcBGcJ
+	Unseal Key 2: OZPVGkltqpLmvHnP9QxWxyZ9H4rGAeuJU7lUa39I5Cpg
+	Unseal Key 3: wypIR03lYUbUOREEC4H4kU9/NH01SnVU7BEBXcr75Rrj
+	Unseal Key 4: VA3CKC4sHC+lMf9uXuj3m+RXkz08imoxrI17nOuAIRR1
+	Unseal Key 5: Y4Xf11HCARw+xM0hEI+DzgnBB1DGnzSBT0yLicJ4rufy
 
-  Initial Root Token: s.qnUWa9meIay29NKtwxdL8nUe
-  ```
+	Initial Root Token: s.qnUWa9meIay29NKtwxdL8nUe
+	```
 - test below codes in other terminal.
 
 ## ready
@@ -53,26 +53,33 @@ export VAULT_ADDR=http://127.0.0.1:8200
 ./vault token create -policy="<policy name>" [-format=json|yaml|table|pretty]
 ```
 * without 'VAULT_TOKEN' variable, most recent token is used for the command even in other session in the same machine. *
-``` bash
-VAULT_TOKEN='<token>' ./vault ...
-# or
-export VAULT_TOKEN='<token>'
-./vault ...
-```
+	``` bash
+	VAULT_TOKEN='<token>' ./vault ...
+	# or
+	export VAULT_TOKEN='<token>'
+	./vault ...
+	```
 
 ## transit
 ### ready
 - make a policy
-``` hcl
-path "transit/encrypt/orders" {
-	capabilities = [ "update" ]
-}
+	``` hcl
+	path "transit/encrypt/orders" {
+		capabilities = [ "update" ]
+	}
 
-path "transit/decrypt/orders" {
-	capabilities = [ "update" ]
-}
-```
-- make a token
+	path "transit/decrypt/orders" {
+		capabilities = [ "update" ]
+	}
+	```
+
+- make key ring
+	```bash
+	./vault secrets enable transit
+	./vault write -f transit/keys/orders
+	```
+
+- make a token(optional)
 
 ### encrypt & decrypt
 ``` bash
