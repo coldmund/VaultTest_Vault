@@ -65,11 +65,11 @@ export VAULT_TOKEN='<token>'
 - make a policy
 ``` hcl
 path "transit/encrypt/orders" {
-		                capabilities = [ "update" ]
+	capabilities = [ "update" ]
 }
 
 path "transit/decrypt/orders" {
-		                capabilities = [ "update" ]
+	capabilities = [ "update" ]
 }
 ```
 - make a token
