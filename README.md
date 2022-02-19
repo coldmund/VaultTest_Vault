@@ -7,6 +7,7 @@
 
 ## init vault. only once after DB is reset.
 ``` bash
+export VAULT_ADDR=http://127.0.0.1:8200
 ./vault operator init
 ```
 - you will get unseal keys and root token like below. save them in safe place.
@@ -19,7 +20,6 @@
 
 	Initial Root Token: s.qnUWa9meIay29NKtwxdL8nUe
 	```
-- test below codes in other terminal.
 
 ## ready
 ``` bash
@@ -29,12 +29,18 @@ export VAULT_ADDR=http://127.0.0.1:8200
 ```
 
 ## use KV
+### ready. 1 time after DB reset.
+```bash
+./vault secrets enable -path=test1 kv
+./vault secrets enable -path=test2 -version=2 kv
+```
+### test
 ``` bash
-./vault secrets enable -path=test1 kv	# not necessary if DB is not reset.
-./vault secrets enable -path=test2 -version=2 kv	# not necessary if DB is not reset.
+# kv ver.1
 ./vault write test1/test11 foo=bar
 ./vault read [-format=json|yaml|table|pretty] test1/test11
 ./vault read -field=<field> test1/test11
+# kv ver.2
 ./vault kv put test2/test22 foo=bar
 ./vault kv get [-format=json|yaml|table|pretty] test2/test22
 ./vault kv get -field=<field> test2/test22
@@ -62,7 +68,7 @@ export VAULT_ADDR=http://127.0.0.1:8200
 
 ## transit
 ### ready
-- make a policy
+- make a policy(optional)
 	``` hcl
 	path "transit/encrypt/orders" {
 		capabilities = [ "update" ]
@@ -121,7 +127,7 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 	```
 3. config role to make DB credentials
 	```bash
-		./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole;	CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
+	./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole; CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}'; GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
 	```
 4. change vault user's db credential
 	```bash
