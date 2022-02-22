@@ -127,9 +127,9 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 	```
 3. config role to make DB credentials
 	```bash
-	./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole; CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}'; GRANT SELECT ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
+	./vault write database/roles/vaultrole db_name=testdb creation_statements="SET ROLE vaultrole; CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}'; GRANT SELECT,INSERT,UPDATE ON testdb.* TO '{{name}}'@'%';" default_ttl="1h" max_ttl="24h"
 	```
-4. change vault user's db credential
+4. change vault user's db credential(recommended)
 	```bash
 	./vault write -force database/rotate-root/testdb
 	```
