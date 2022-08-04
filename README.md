@@ -3,27 +3,29 @@
 ## run vault
 ``` bash
 ./vault server -config=./config/vault.hcl
+# or
+docker run --cap-add=IPC_LOCK --rm -v /home/joonyonghong/work/VaultTest/VaultTest_Vault/config:/vault/config --name=vault_test -p 8300:8300 vault server
 ```
 
 ## init vault. only once after DB is reset.
 ``` bash
-export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_ADDR=http://127.0.0.1:8300
 ./vault operator init
 ```
 - you will get unseal keys and root token like below. save them in safe place.
 	```
-	Unseal Key 1: G4n1dca3C7t/mpzAmAA2CM1bz6xrUrgsCwU3dINcBGcJ
-	Unseal Key 2: OZPVGkltqpLmvHnP9QxWxyZ9H4rGAeuJU7lUa39I5Cpg
-	Unseal Key 3: wypIR03lYUbUOREEC4H4kU9/NH01SnVU7BEBXcr75Rrj
-	Unseal Key 4: VA3CKC4sHC+lMf9uXuj3m+RXkz08imoxrI17nOuAIRR1
-	Unseal Key 5: Y4Xf11HCARw+xM0hEI+DzgnBB1DGnzSBT0yLicJ4rufy
+    Unseal Key 1: oaV0wDGMOy8lbqSw7Ao/M59gPvc7z4hz8Pg+RRD60t8s
+    Unseal Key 2: PxIhDBNpcjfdi0XgL+FCg8tVEqYDR1wybdWZtBV5I1kN
+    Unseal Key 3: 97X/meXvjKdpGt9j2MM8SFzjXd+0FYUC+mURZiNHgHvi
+    Unseal Key 4: wAn36XK5kexrZ/GTbXJs0R8GuaKy3Bb5/N609F3Kpjba
+    Unseal Key 5: 2vx70fzFR+qCpYDAGB9QeZMv88yYOWl6ABHTuZdpKlGo
 
-	Initial Root Token: s.qnUWa9meIay29NKtwxdL8nUe
+    Initial Root Token: hvs.33J5k3nKubVgX8wCelADyKJX
 	```
 
 ## ready
 ``` bash
-export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_ADDR=http://127.0.0.1:8300
 ./vault operator unseal # 3 times
 ./vault login <root token>
 ```
@@ -117,6 +119,11 @@ plaintext    NDExMSAxMTExIDExMTEgMTExMQo=
 ```
 
 ## database credential
+
+0. DB setting
+    1. create role
+    2. set privileges for the role
+    3. create user and set role
 1. enable database secrets engine
 	``` bash
 	./vault secrets enable database
